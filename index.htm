@@ -1,0 +1,1206 @@
+```html
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roderick Digital Academy - Mfumo wa Kidijitali wa Elimu</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font (Inter & Outfit) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',
+                            card: '#151D2A',
+                            border: '#2A364F',
+                            accent: '#38BDF8',
+                            neon: '#06B6D4',
+                            emerald: '#10B981',
+                            amber: '#F59E0B',
+                            purple: '#A855F7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Glassmorphism & Custom Effects */
+        .glass-panel {
+            background: rgba(21, 29, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-accent {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A364F;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38BDF8;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-brand-accent selection:text-slate-900">
+
+    <!-- TOP ANNOUNCEMENT & DYNAMIC TICKER -->
+    <div class="bg-slate-900/90 border-b border-slate-800 text-xs py-2 px-4 overflow-hidden relative z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2 text-brand-accent font-medium">
+                <span class="flex h-2 w-2 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                </span>
+                <span>TAARIFA ZA MOJA KWA MOJA:</span>
+            </div>
+            <div class="overflow-hidden whitespace-nowrap w-2/3 md:w-3/4">
+                <div id="liveTicker" class="inline-block animate-marquee transition-all duration-1000 text-slate-300">
+                    🟢 Baraka Juma ametoka kukamilisha moduli ya Excel Mastery! &nbsp;&nbsp;|&nbsp;&nbsp; 🟢 Mwanafunzi mpya Amani Swai amejiunga akitokea Arusha! &nbsp;&nbsp;|&nbsp;&nbsp; 🟢 Pongezi kwa Rehema Hassan kwa kupata Cheti cha Uhariri wa Video!
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-3 text-slate-400">
+                <span id="currentDate" class="text-xs"></span>
+                <span class="text-slate-700">|</span>
+                <span id="currentTime" class="text-brand-accent font-mono text-xs"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER NAVIGATION -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Brand Name -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-accent to-blue-600 flex items-center justify-center text-slate-950 font-display font-extrabold text-2xl shadow-lg glow-accent">
+                        R
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-xl md:text-2xl tracking-wide bg-gradient-to-r from-white via-slate-200 to-brand-accent bg-clip-text text-transparent">
+                            RODERICK ACADEMY
+                        </h1>
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Smart Digital & Multimedia Fellowship</p>
+                    </div>
+                </div>
+
+                <!-- Dynamic User Header Badge (If Registered) -->
+                <div id="userHeaderCard" class="hidden md:flex items-center space-x-4 bg-slate-900/80 border border-slate-800 rounded-full py-1.5 px-4">
+                    <img id="navProfilePic" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Profile" class="w-9 h-9 rounded-full object-cover border-2 border-brand-accent">
+                    <div class="text-left">
+                        <div class="flex items-center space-x-2">
+                            <span id="navUserName" class="text-sm font-semibold text-white">Mwanafunzi</span>
+                            <span id="navStatusBadge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full font-medium">Bure</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Poinz: <span id="navPoints" class="text-brand-accent font-bold">150</span> XP</p>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex lg:hidden">
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10-PAGE NAVIGATION BAR (DESKTOP) -->
+        <nav class="hidden lg:block bg-slate-950/60 border-t border-slate-800/60 text-xs font-medium">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between overflow-x-auto py-1">
+                <button onclick="switchTab('home')" id="tab-home" class="nav-btn py-2.5 px-3 text-brand-accent border-b-2 border-brand-accent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-house"></i> <span>1. Nyumbani</span>
+                </button>
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-chart-line"></i> <span>2. Dashibodi</span>
+                </button>
+                <button onclick="switchTab('free-ict')" id="tab-free-ict" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-desktop"></i> <span>3. Misingi ya ICT</span>
+                </button>
+                <button onclick="switchTab('office-mastery')" id="tab-office-mastery" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-file-excel"></i> <span>4. Office Premium</span>
+                </button>
+                <button onclick="switchTab('media-vfx')" id="tab-media-vfx" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-film"></i> <span>5. Video & VFX</span>
+                </button>
+                <button onclick="switchTab('audio-lab')" id="tab-audio-lab" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-music"></i> <span>6. Sauti & BandLab</span>
+                </button>
+                <button onclick="switchTab('exercises')" id="tab-exercises" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-pen-to-square"></i> <span>7. Mazoezi</span>
+                </button>
+                <button onclick="switchTab('fellowship')" id="tab-fellowship" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-users"></i> <span>8. Fellowship Wall</span>
+                </button>
+                <button onclick="switchTab('certificate')" id="tab-certificate" class="nav-btn py-2.5 px-3 text-slate-400 hover:text-white border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-award"></i> <span>9. Cheti Kidijitali</span>
+                </button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="nav-btn py-2.5 px-3 text-amber-400 hover:text-amber-300 border-b-2 border-transparent flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-user-shield"></i> <span>10. Panel ya Mwalimu</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- MOBILE NAVIGATION MENU DROPDOWN -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-slate-900 border-b border-slate-800 px-4 py-4 space-y-2 text-sm">
+            <button onclick="switchTab('home')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-brand-accent"><i class="fa-solid fa-house w-6"></i> 1. Nyumbani</button>
+            <button onclick="switchTab('dashboard')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-chart-line w-6"></i> 2. Dashibodi</button>
+            <button onclick="switchTab('free-ict')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-desktop w-6"></i> 3. Misingi ya ICT</button>
+            <button onclick="switchTab('office-mastery')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-file-excel w-6"></i> 4. Office Premium</button>
+            <button onclick="switchTab('media-vfx')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-film w-6"></i> 5. Video & VFX</button>
+            <button onclick="switchTab('audio-lab')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-music w-6"></i> 6. Sauti & BandLab</button>
+            <button onclick="switchTab('exercises')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-pen-to-square w-6"></i> 7. Mazoezi</button>
+            <button onclick="switchTab('fellowship')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-users w-6"></i> 8. Fellowship Community</button>
+            <button onclick="switchTab('certificate')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-award w-6"></i> 9. Cheti Kidijitali</button>
+            <button onclick="switchTab('admin')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-800 text-amber-400"><i class="fa-solid fa-user-shield w-6"></i> 10. Panel ya Mwalimu</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ================= PAGE 1: HOME LANDING & GREETINGS ================= -->
+        <section id="page-home" class="space-y-8 animate-fade-in">
+            <!-- HERO DYNAMIC GREETING CARD -->
+            <div class="glass-panel rounded-3xl p-6 md:p-10 relative overflow-hidden glow-accent border border-brand-accent/30">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="max-w-3xl space-y-4">
+                    <div class="inline-flex items-center space-x-2 bg-brand-accent/10 border border-brand-accent/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-brand-accent">
+                        <i class="fa-solid fa-sun"></i>
+                        <span id="greetingTimeText">Habari za Asubuhi!</span>
+                    </div>
+
+                    <h2 id="greetingTitle" class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight">
+                        Karibu Roderick Digital Academy. <br><span class="bg-gradient-to-r from-brand-accent via-cyan-300 to-emerald-400 bg-clip-text text-transparent">Jifunze, Fundisha Wengine & Fanikiwa.</span>
+                    </h2>
+
+                    <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                        Tafadhali tumia mfumo huu kujiendeleza kimaarifaa. Tunakukaribisha kwa heshima zote kuanza safari yako ya kompyuta, mifumo ya Office, uhariri wa video na utengenezaji wa sauti.
+                    </p>
+
+                    <!-- REGISTER / CONTINUE ACTION BUTTONS -->
+                    <div class="pt-4 flex flex-wrap gap-4 items-center">
+                        <button onclick="openRegistrationModal()" class="bg-gradient-to-r from-brand-accent to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold px-7 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center space-x-2 text-sm">
+                            <i class="fa-solid fa-user-plus text-base"></i>
+                            <span>Jisajili au Badili Taarifa</span>
+                        </button>
+                        
+                        <button onclick="openRollCallModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-6 py-3.5 rounded-xl transition flex items-center space-x-2 text-sm">
+                            <i class="fa-solid fa-clipboard-user text-emerald-400"></i>
+                            <span>Jaza Roll Call ya Leo</span>
+                        </button>
+
+                        <button onclick="shareAcademyOnWhatsApp()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-semibold px-5 py-3.5 rounded-xl transition flex items-center space-x-2 text-sm">
+                            <i class="fa-brands fa-whatsapp text-lg text-emerald-400"></i>
+                            <span>Alika Marafiki (WhatsApp)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACADEMY STATS & FEATURES GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl space-y-3 border-l-4 border-l-brand-accent">
+                    <div class="w-12 h-12 bg-brand-accent/10 text-brand-accent rounded-xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Mafunzo ya Vitendo</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Masomo yaliyopangiliwa kwa kina kuanzia misingi ya bure hadi viwango vya juu vya kitaalamu vya Excel, Word na Video.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-3 border-l-4 border-l-emerald-500">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-handshake-angle"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Fellowship & Ushahidi</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Fundisha wengine mtaani au nyumbani, pakia picha au sauti za ushahidi na upate pongezi na idhini rasmi kutoka kwa mwalimu.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-3 border-l-4 border-l-amber-500">
+                    <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-certificate"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Cheti cha Kidijitali</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Mfumo unakuzalishia Cheti Rasmi kilicho na picha yako uliyoweka wakati wa usajili mara tu unapokamilisha masomo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- WELCOME TEACHER AUDIO / MESSAGE SECTION -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80" alt="Mwalimu Rodrick" class="w-16 h-16 rounded-2xl object-cover border-2 border-brand-accent">
+                        <span class="absolute -bottom-1 -right-1 bg-emerald-500 w-4 h-4 rounded-full border-2 border-slate-900"></span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-base">Ujumbe wa Mwalimu Mkuu (Rodrick)</h4>
+                        <p class="text-xs text-slate-400">"Karibu sana mwanafunzi wetu mwema. Elimu ni mwanga, na furaha yangu ni kuona unakua."</p>
+                    </div>
+                </div>
+
+                <button onclick="playTeacherAudioGreeting()" class="w-full md:w-auto bg-slate-800 hover:bg-slate-700 text-brand-accent border border-brand-accent/30 font-semibold px-5 py-3 rounded-xl transition flex items-center justify-center space-x-3 text-xs">
+                    <i id="audioIcon" class="fa-solid fa-volume-high text-lg"></i>
+                    <span id="audioBtnText">Sikiliza Salamu ya Sauti ya Mwalimu</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: STUDENT DASHBOARD ================= -->
+        <section id="page-dashboard" class="hidden space-y-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Dashibodi ya Maendeleo ya Mwanafunzi</h2>
+                    <p class="text-xs text-slate-400">Tazama takwimu zako, nishani na hatua za masomo uliyofikia.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="text-xs text-slate-400">Hali ya Roll Call Leo:</span>
+                    <span id="dashboardRollStatus" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-semibold">
+                        <i class="fa-solid fa-check-circle mr-1"></i> Imejazwa
+                    </span>
+                </div>
+            </div>
+
+            <!-- DASHBOARD STAT CARDS -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-2xl text-center space-y-1">
+                    <p class="text-xs text-slate-400">Masomo Yaliyokamilika</p>
+                    <p id="statCompletedLessons" class="font-display text-3xl font-extrabold text-brand-accent">3 / 10</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center space-y-1">
+                    <p class="text-xs text-slate-400">Alama za Poinz (XP)</p>
+                    <p id="statPoints" class="font-display text-3xl font-extrabold text-emerald-400">150 XP</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center space-y-1">
+                    <p class="text-xs text-slate-400">Fellowships Zilizoidhinishwa</p>
+                    <p id="statFellowships" class="font-display text-3xl font-extrabold text-amber-400">2</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center space-y-1">
+                    <p class="text-xs text-slate-400">Hali ya Akaunti</p>
+                    <p id="statAccountTier" class="font-display text-xl font-extrabold text-cyan-400 pt-1">Ngazi ya Bure</p>
+                </div>
+            </div>
+
+            <!-- PROGRESS ROADMAP & BADGES -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Roadmap -->
+                <div class="lg:col-span-2 glass-panel p-6 rounded-2xl space-y-6">
+                    <h3 class="font-bold text-lg text-white flex items-center justify-between">
+                        <span>Ramani ya Safari Yako ya Masomo</span>
+                        <span class="text-xs font-normal text-brand-accent">30% Imekamilika</span>
+                    </h3>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-900 h-3 rounded-full overflow-hidden border border-slate-800">
+                        <div id="dashboardProgressBar" class="bg-gradient-to-r from-brand-accent to-emerald-400 h-full w-[30%] transition-all duration-500"></div>
+                    </div>
+
+                    <!-- Lesson Steps Checklist -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+                                <span class="text-sm font-medium text-slate-200">1. Misingi ya Kompyuta & Simu</span>
+                            </div>
+                            <span class="text-xs text-emerald-400 font-semibold">Tayari</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+                                <span class="text-sm font-medium text-slate-200">2. Internet, Usalama & Email</span>
+                            </div>
+                            <span class="text-xs text-emerald-400 font-semibold">Tayari</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-lock text-amber-400 text-lg"></i>
+                                <span class="text-sm font-medium text-slate-300">3. Microsoft Excel Mastery (Premium)</span>
+                            </div>
+                            <button onclick="switchTab('office-mastery')" class="text-xs bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 px-3 py-1 rounded-lg border border-amber-500/30 font-semibold">Fungua</button>
+                        </div>
+                        <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-lock text-slate-500 text-lg"></i>
+                                <span class="text-sm font-medium text-slate-400">4. Video Editing & CapCut VFX</span>
+                            </div>
+                            <span class="text-xs text-slate-500">Imefungwa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges Wall -->
+                <div class="glass-panel p-6 rounded-2xl space-y-6">
+                    <h3 class="font-bold text-lg text-white">Nishani Zako (Badges)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-brand-accent/30 text-center space-y-2">
+                            <div class="w-12 h-12 mx-auto bg-brand-accent/20 text-brand-accent rounded-full flex items-center justify-center text-2xl">
+                                🌟
+                            </div>
+                            <p class="text-xs font-bold text-white">Mwanafunzi Mpya</p>
+                            <p class="text-[10px] text-slate-400">Umejisajili vyema</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-emerald-500/30 text-center space-y-2">
+                            <div class="w-12 h-12 mx-auto bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-2xl">
+                                🤝
+                            </div>
+                            <p class="text-xs font-bold text-white">Mwalimu Jamii</p>
+                            <p class="text-[10px] text-slate-400">Umeshirikisha wengine</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800 text-center space-y-2 opacity-50">
+                            <div class="w-12 h-12 mx-auto bg-slate-800 text-slate-500 rounded-full flex items-center justify-center text-2xl">
+                                🏆
+                            </div>
+                            <p class="text-xs font-bold text-slate-400">Bingwa wa Office</p>
+                            <p class="text-[10px] text-slate-500">Inahitaji Premium</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800 text-center space-y-2 opacity-50">
+                            <div class="w-12 h-12 mx-auto bg-slate-800 text-slate-500 rounded-full flex items-center justify-center text-2xl">
+                                🎬
+                            </div>
+                            <p class="text-xs font-bold text-slate-400">Mhariri Mkuu</p>
+                            <p class="text-[10px] text-slate-500">Maliza Video VFX</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: FREE ICT & COMPUTER BASICS ================= -->
+        <section id="page-free-ict" class="hidden space-y-8 animate-fade-in">
+            <div>
+                <div class="inline-block bg-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-full font-bold mb-2">
+                    MODULI YA BURE YA SIKU ZOTE
+                </div>
+                <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Moduli 1: Misingi Mikuu ya Kompyuta & Simu</h2>
+                <p class="text-xs text-slate-400">Soma masomo haya bila malipo yoyote ili ujenge msingi thabiti.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Lesson 1 Card -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="aspect-video bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center border border-slate-800">
+                        <i class="fa-solid fa-play-circle text-5xl text-brand-accent cursor-pointer hover:scale-110 transition"></i>
+                        <span class="absolute bottom-2 right-2 bg-slate-950/80 text-[10px] text-slate-300 px-2 py-0.5 rounded">12:45 min</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Somo 1.1: Kompyuta ni nini na Inafanyaje kazi?</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Jifunze sehemu kuu za kompyuta (Hardware & Software), mfumo wa Operating System (Windows) na jinsi ya kutumia Keyboard na Mouse kwa ustadi.
+                    </p>
+                    <button onclick="markLessonComplete('ICT 1.1')" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 font-semibold py-2.5 rounded-xl border border-slate-700 text-xs flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Tia Saini: Nimemaliza Somo Hili</span>
+                    </button>
+                </div>
+
+                <!-- Lesson 2 Card -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="aspect-video bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center border border-slate-800">
+                        <i class="fa-solid fa-play-circle text-5xl text-brand-accent cursor-pointer hover:scale-110 transition"></i>
+                        <span class="absolute bottom-2 right-2 bg-slate-950/80 text-[10px] text-slate-300 px-2 py-0.5 rounded">18:20 min</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Somo 1.2: Matumizi Sahihi ya Internet & Email</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Jinsi ya kutafuta taarifa mtandaoni kwa usalama, kufungua Google Account, na kutuma barua pepe za kitaalamu (Professional Emails).
+                    </p>
+                    <button onclick="markLessonComplete('ICT 1.2')" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 font-semibold py-2.5 rounded-xl border border-slate-700 text-xs flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Tia Saini: Nimemaliza Somo Hili</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: PREMIUM OFFICE MASTERY ================= -->
+        <section id="page-office-mastery" class="hidden space-y-8 animate-fade-in">
+            <div>
+                <div class="inline-block bg-amber-500/20 text-amber-400 text-xs px-3 py-1 rounded-full font-bold mb-2">
+                    MODULI YA KITAALAMU (PREMIUM TIER)
+                </div>
+                <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Moduli 2: Microsoft Office Mastery (Excel, Word, Access)</h2>
+                <p class="text-xs text-slate-400">Jifunze Excel ya undani, fomula za hesabu, kutengeneza mifumo na database za biashara.</p>
+            </div>
+
+            <!-- LOCKED / UNLOCKED DYNAMIC GATE -->
+            <div id="officeLockedBanner" class="glass-panel p-8 rounded-3xl border border-amber-500/30 text-center space-y-4 glow-accent">
+                <div class="w-16 h-16 mx-auto bg-amber-500/10 text-amber-400 rounded-full flex items-center justify-center text-3xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="font-bold text-xl text-white">Moduli Hii Imefungwa Kwa Sasa</h3>
+                <p class="text-xs text-slate-300 max-w-lg mx-auto leading-relaxed">
+                    Ili kupata idhini ya masomo ya kina ya Excel, Word na Access, unahitaji kutoa ada ndogo ya mchango au kupata kibali rasmi kutoka kwa Mwalimu Mkuu.
+                </p>
+
+                <div class="pt-2 flex flex-wrap justify-center gap-4">
+                    <button onclick="requestPaymentApproval('Microsoft Office Premium')" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-xs flex items-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-base"></i>
+                        <span>Omba Idhini kupitia WhatsApp</span>
+                    </button>
+
+                    <button onclick="simulateTeacherUnlock()" class="bg-slate-800 text-slate-300 hover:text-white border border-slate-700 px-5 py-3 rounded-xl text-xs font-semibold">
+                        Simulate Teacher Unlock (Demo)
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTENT WHEN UNLOCKED -->
+            <div id="officeUnlockedContent" class="hidden space-y-6">
+                <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs font-medium flex items-center space-x-3">
+                    <i class="fa-solid fa-lock-open text-base"></i>
+                    <span>Hongera! Umeruhusiwa kusoma masomo haya ya Premium Office Mastery.</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-5 rounded-xl space-y-3">
+                        <div class="text-brand-accent text-3xl"><i class="fa-solid fa-file-excel"></i></div>
+                        <h4 class="font-bold text-white">Excel Advanced Formulas</h4>
+                        <p class="text-xs text-slate-400">VLOOKUP, IF Statements, Pivot Tables na Dashboard za Hesabu.</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-xl space-y-3">
+                        <div class="text-blue-400 text-3xl"><i class="fa-solid fa-file-word"></i></div>
+                        <h4 class="font-bold text-white">Professional Word Formatting</h4>
+                        <p class="text-xs text-slate-400">Uuandaaji wa Ripoti za Kitaalamu, Barua na Vitabu.</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-xl space-y-3">
+                        <div class="text-red-400 text-3xl"><i class="fa-solid fa-database"></i></div>
+                        <h4 class="font-bold text-white">Microsoft Access Database</h4>
+                        <p class="text-xs text-slate-400">Kujenga mifumo ya kuhifadhi kumbukumbu za wateja na bidhaa.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: MEDIA & VIDEO EDITING VFX ================= -->
+        <section id="page-media-vfx" class="hidden space-y-8 animate-fade-in">
+            <div>
+                <div class="inline-block bg-purple-500/20 text-purple-400 text-xs px-3 py-1 rounded-full font-bold mb-2">
+                    UHARIRI WA VIDEO & SANIFA ZA PICHA
+                </div>
+                <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Moduli 3: Media, CapCut Video Editing & VFX</h2>
+                <p class="text-xs text-slate-400">Tengeneza video za vichekesho, matangazo ya biashara na athari za kiwango cha juu.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-clapperboard"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Somo 3.1: CapCut Mobile & Desktop Masterclass</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Jinsi ya kukata video (Trimming), kuweka Transitions, Green Screen Effect (Chroma Key), na kuweka Subtitles za kisasa kiotomatiki.
+                    </p>
+                    <button onclick="markLessonComplete('Video VFX 3.1')" class="w-full bg-slate-800 hover:bg-slate-700 text-brand-accent font-semibold py-2.5 rounded-xl border border-slate-700 text-xs">
+                        Mark Completed (+30 XP)
+                    </button>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-face-laugh-squint"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">Somo 3.2: Kuediti Video za Vichekesho & Sound Effects</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Jifunze kuweka sauti za kuchekesha kwa muda sahihi (Timing), Zooms za haraka, na kuandaa maudhui yanayotrend TikTok na Instagram.
+                    </p>
+                    <button onclick="markLessonComplete('Video VFX 3.2')" class="w-full bg-slate-800 hover:bg-slate-700 text-brand-accent font-semibold py-2.5 rounded-xl border border-slate-700 text-xs">
+                        Mark Completed (+30 XP)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 6: AUDIO & BEAT MAKING ================= -->
+        <section id="page-audio-lab" class="hidden space-y-8 animate-fade-in">
+            <div>
+                <div class="inline-block bg-cyan-500/20 text-cyan-400 text-xs px-3 py-1 rounded-full font-bold mb-2">
+                    PRODUKSHENI YA SAUTI & MUZIKI
+                </div>
+                <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Moduli 4: BandLab Studio & Suno Audio AI</h2>
+                <p class="text-xs text-slate-400">Rekodi sauti safi ya Podikasti, tengeneza Beat na Melodies kupitia simu yako.</p>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-white">BandLab Mobile Audio Studio</h3>
+                        <p class="text-xs text-slate-400">Mafunzo ya kurekodi na Kusafisha Sauti (Equalizer & Reverb)</p>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 space-y-3">
+                    <p class="text-xs font-semibold text-slate-300">Mfano wa Somo la Sauti la Mwalimu (Voice Note Lesson):</p>
+                    <audio controls class="w-full h-10">
+                        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+                        Kivinjari chako hakisaidii sauti.
+                    </audio>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 7: INTERACTIVE EXERCISES & QUIZ ================= -->
+        <section id="page-exercises" class="hidden space-y-8 animate-fade-in">
+            <div>
+                <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Tathmini na Mazoezi ya Vitendo</h2>
+                <p class="text-xs text-slate-400">Pima uelewa wako ili upate alama na ujiandae kupokea Cheti chako.</p>
+            </div>
+
+            <div class="glass-panel p-6 md:p-8 rounded-3xl space-y-6 border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-brand-accent font-bold">Swali la 1 kati ya 3</span>
+                    <span class="text-xs text-slate-400">Alama: 20 XP</span>
+                </div>
+
+                <h3 class="font-bold text-base md:text-lg text-white">
+                    Ni fomula gani inayotumika kujumlisha namba zote kuanzia cell A1 hadi A10 ndani ya Microsoft Excel?
+                </h3>
+
+                <div class="space-y-3">
+                    <button onclick="submitQuizAnswer(this, false)" class="w-full text-left p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-brand-accent text-xs font-medium text-slate-300 transition">
+                        A) =TOTAL(A1:A10)
+                    </button>
+                    <button onclick="submitQuizAnswer(this, true)" class="w-full text-left p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-brand-accent text-xs font-medium text-slate-300 transition">
+                        B) =SUM(A1:A10)
+                    </button>
+                    <button onclick="submitQuizAnswer(this, false)" class="w-full text-left p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-brand-accent text-xs font-medium text-slate-300 transition">
+                        C) =ADD(A1..A10)
+                    </button>
+                </div>
+
+                <div id="quizFeedback" class="hidden p-4 rounded-xl text-xs font-semibold"></div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 8: FELLOWSHIP COMMUNITY WALL ================= -->
+        <section id="page-fellowship" class="hidden space-y-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Ukuta wa Jamii & Fellowship</h2>
+                    <p class="text-xs text-slate-400">Fundisha wengine mtaani, weka picha/sauti hapa kama ushahidi upate Ponzi na Approval.</p>
+                </div>
+                <button onclick="openFellowshipPostModal()" class="bg-gradient-to-r from-brand-emerald to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs flex items-center space-x-2">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>Weka Ushahidi wa Fellowship</span>
+                </button>
+            </div>
+
+            <!-- FELLOWSHIP POSTS FEED -->
+            <div id="fellowshipFeed" class="space-y-6">
+                <!-- Sample Fellowship Post 1 -->
+                <div class="glass-panel p-6 rounded-2xl space-y-4 border border-slate-800">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Student" class="w-10 h-10 rounded-full object-cover border-2 border-emerald-400">
+                            <div>
+                                <h4 class="font-bold text-sm text-white">Sarah Emmanuel</h4>
+                                <p class="text-[10px] text-slate-400">Masaa 2 yaliyopita • Arusha</p>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-3 py-1 rounded-full font-bold">
+                            <i class="fa-solid fa-circle-check"></i> Imeidhinishwa na Mwalimu
+                        </span>
+                    </div>
+
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Leo nimefanikiwa kumfundisha mdogo wangu jinsi ya kutengeneza CV na Barua ya Kazi kupitia Microsoft Word kama tulivyojifunza kwenye Moduli ya 2! 
+                    </p>
+
+                    <div class="rounded-xl overflow-hidden max-h-64 border border-slate-800">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&auto=format&fit=crop&q=80" alt="Fellowship Evidence" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- Teacher Comment Section -->
+                    <div class="p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 space-y-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-xs text-brand-accent">Mwalimu Rodrick (Comment):</span>
+                            <span class="text-[10px] text-slate-500">Masaa 1 yaliyopita</span>
+                        </div>
+                        <p class="text-xs text-slate-300">
+                            "Hongera sana Sarah! Umeonyesha moyo mkubwa wa uongozi na staha. Endelea kuangazia jamii yako!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 9: DIGITAL CERTIFICATE GENERATOR ================= -->
+        <section id="page-certificate" class="hidden space-y-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Cheti chako cha Kidijitali</h2>
+                    <p class="text-xs text-slate-400">Cheti hiki kinazalishwa rasmi kikiwa na picha na jina lako la usajili.</p>
+                </div>
+                <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-brand-accent border border-brand-accent/30 font-bold px-5 py-2.5 rounded-xl text-xs flex items-center space-x-2">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Pakua / Print Cheti</span>
+                </button>
+            </div>
+
+            <!-- THE OFFICIAL DYNAMIC CERTIFICATE CANVAS CARD -->
+            <div id="certificateCard" class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8 md:p-14 rounded-3xl border-4 border-amber-500/40 relative overflow-hidden shadow-2xl text-center space-y-6">
+                <!-- Certificate Decorative Ornaments -->
+                <div class="absolute top-0 left-0 w-32 h-32 border-t-8 border-l-8 border-amber-500/60 rounded-tl-3xl pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 w-32 h-32 border-b-8 border-r-8 border-amber-500/60 rounded-br-3xl pointer-events-none"></div>
+                
+                <div class="space-y-2">
+                    <p class="text-xs tracking-widest text-amber-400 font-bold uppercase">RODERICK DIGITAL ACADEMY TANZANIA</p>
+                    <h3 class="font-display font-extrabold text-2xl md:text-4xl text-white tracking-wide">CHETI CHA MAFANIKIO KITAALAMU</h3>
+                    <p class="text-xs text-slate-400 italic">Certificate of Competency & Fellowship</p>
+                </div>
+
+                <div class="py-2">
+                    <p class="text-xs text-slate-400">Cheti hiki kinathibitisha kuwa:</p>
+                    <h4 id="certStudentName" class="font-display font-bold text-2xl md:text-4xl text-brand-accent py-2 border-b-2 border-brand-accent/30 inline-block px-8">
+                        Mwanafunzi Mwema
+                    </h4>
+                </div>
+
+                <!-- Student Photo on Certificate -->
+                <div class="flex justify-center my-4">
+                    <img id="certStudentPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Student Photo" class="w-24 h-24 rounded-full object-cover border-4 border-amber-400 shadow-lg">
+                </div>
+
+                <p class="text-xs text-slate-300 max-w-xl mx-auto leading-relaxed">
+                    Amekamilisha kwa mafanikio makubwa mafunzo ya vitendo ya <span class="font-bold text-white">Misingi ya Kompyuta, Microsoft Office Mastery, Video Editing VFX na Fellowship ya Kijamii</span>.
+                </p>
+
+                <div class="pt-6 grid grid-cols-2 md:grid-cols-3 gap-4 items-end border-t border-slate-800 text-xs">
+                    <div>
+                        <p class="text-slate-500 text-[10px]">TAREHE YA KUTOLEWA</p>
+                        <p id="certDate" class="font-bold text-slate-200">07 Novemba 2026</p>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="w-16 h-16 mx-auto bg-amber-500/10 rounded-full border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl">
+                            <i class="fa-solid fa-stamp"></i>
+                        </div>
+                        <p class="text-[9px] text-amber-400 mt-1 font-bold">VERIFIED ACADEMY SEAL</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-[10px]">SAINI YA MWALIMU MKUU</p>
+                        <p class="font-display font-bold text-brand-accent italic text-base">Rodrick Mwalimu</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 10: ADMIN & APPROVAL CONTROL PANEL ================= -->
+        <section id="page-admin" class="hidden space-y-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-block bg-amber-500/20 text-amber-400 text-xs px-3 py-1 rounded-full font-bold mb-2">
+                        SENGEREMA / MWALIMU CONTROL PANEL
+                    </div>
+                    <h2 class="font-display font-bold text-2xl md:text-3xl text-white">Chumba cha Utawala (Admin Control Gate)</h2>
+                    <p class="text-xs text-slate-400">Idhinisha wanafunzi walioomba Premium, kagua Roll Calls na utoe maoni ya Fellowship.</p>
+                </div>
+            </div>
+
+            <!-- ADMIN TABS / CONTROL GRID -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Student Approval Queue -->
+                <div class="lg:col-span-2 glass-panel p-6 rounded-2xl space-y-6">
+                    <h3 class="font-bold text-lg text-white flex items-center justify-between">
+                        <span>Maombi ya Idhini ya Wanafunzi (Approval Queue)</span>
+                        <span class="bg-amber-500/20 text-amber-300 text-xs px-2.5 py-0.5 rounded-full font-bold">2 Yanayosubiri</span>
+                    </h3>
+
+                    <div class="space-y-4">
+                        <!-- Student Request Item 1 -->
+                        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="w-10 h-10 rounded-full object-cover border border-brand-accent">
+                                <div>
+                                    <h4 class="font-bold text-sm text-white">Emmanuel Dickson</h4>
+                                    <p class="text-xs text-slate-400">Kipengele: <span class="text-amber-400">Microsoft Office Premium</span></p>
+                                    <p class="text-[10px] text-slate-500">Sababu: Nimemaliza muamala wa mchango mwalimu.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="approveStudentRequest(this, 'Emmanuel Dickson')" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs">
+                                    Approve & Unlock
+                                </button>
+                                <button class="bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 py-2 rounded-lg text-xs">
+                                    Kataa
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Student Request Item 2 -->
+                        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80" class="w-10 h-10 rounded-full object-cover border border-brand-accent">
+                                <div>
+                                    <h4 class="font-bold text-sm text-white">Grace Masawe</h4>
+                                    <p class="text-xs text-slate-400">Kipengele: <span class="text-emerald-400">Fungua Roll Call Attendance</span></p>
+                                    <p class="text-[10px] text-slate-500">Sababu: Nilikuwa na udhuru wa safari jana.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="approveStudentRequest(this, 'Grace Masawe')" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs">
+                                    Approve & Unlock
+                                </button>
+                                <button class="bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 py-2 rounded-lg text-xs">
+                                    Kataa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Quick Actions -->
+                <div class="glass-panel p-6 rounded-2xl space-y-6">
+                    <h3 class="font-bold text-lg text-white">Usimamizi wa Haraka</h3>
+
+                    <div class="space-y-3">
+                        <button onclick="alert('Mfumo wa kutuma ujumbe wa pamoja unafanya kazi kikamilifu!')" class="w-full text-left p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 font-semibold flex items-center justify-between">
+                            <span><i class="fa-solid fa-bullhorn text-brand-accent mr-2"></i> Tuma Tangazo kwa Wanafunzi Wote</span>
+                            <i class="fa-solid fa-chevron-right text-slate-600"></i>
+                        </button>
+                        <button onclick="alert('Vyeti vyote vipo salama kwenye database ya wingu.')" class="w-full text-left p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 font-semibold flex items-center justify-between">
+                            <span><i class="fa-solid fa-file-contract text-emerald-400 mr-2"></i> Pakua Kumbukumbu za Vyeti</span>
+                            <i class="fa-solid fa-chevron-right text-slate-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-slate-800/80 py-8 mt-12 text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-slate-950 font-bold">R</div>
+                <div>
+                    <p class="font-bold text-white">RODERICK DIGITAL ACADEMY</p>
+                    <p class="text-[10px]">Haki zote zimehifadhiwa © 2026. Mfumo wa Elimu ya Kidijitali.</p>
+                </div>
+            </div>
+
+            <div class="flex space-x-6 text-slate-400">
+                <a href="#" onclick="switchTab('home')" class="hover:text-brand-accent">Nyumbani</a>
+                <a href="#" onclick="switchTab('fellowship')" class="hover:text-brand-accent">Fellowship Wall</a>
+                <a href="#" onclick="shareAcademyOnWhatsApp()" class="hover:text-brand-accent">WhatsApp Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= MODAL DIALOGS ================= -->
+
+    <!-- REGISTRATION MODAL -->
+    <div id="registrationModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-6 border border-brand-accent/30 glow-accent relative animate-fade-in">
+            <button onclick="closeRegistrationModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <h3 class="font-display font-bold text-xl text-white">Fomu ya Usajili wa Mwanafunzi</h3>
+                <p class="text-xs text-slate-400">Weka taarifa zako sahihi pamoja na picha yako ya Wasifu.</p>
+            </div>
+
+            <!-- Profile Image Preview & Upload -->
+            <div class="text-center space-y-2">
+                <img id="formPhotoPreview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Preview" class="w-20 h-20 mx-auto rounded-full object-cover border-2 border-brand-accent">
+                <label class="cursor-pointer inline-block text-xs text-brand-accent hover:underline font-semibold">
+                    <span>Pakia Picha Yako</span>
+                    <input type="file" id="inputPhoto" accept="image/*" class="hidden" onchange="previewUserPhoto(event)">
+                </label>
+            </div>
+
+            <form onsubmit="handleRegistrationSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Jina Kamili:</label>
+                    <input type="text" id="regFullName" required placeholder="Mfano: Baraka Juma" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Namba ya Simu (WhatsApp):</label>
+                    <input type="tel" id="regPhone" required placeholder="0712 345 678" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Mahali Unapoishi (Mkoa/Wilaya):</label>
+                    <input type="text" id="regLocation" required placeholder="Mfano: Arusha / Mwanza" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-brand-accent to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg text-sm">
+                    Kamilisha Usajili Sasa
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DAILY ROLL CALL MODAL -->
+    <div id="rollCallModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-6 border border-emerald-500/30 glow-emerald relative animate-fade-in">
+            <button onclick="closeRollCallModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 mx-auto bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center text-xl font-bold mb-2">
+                    <i class="fa-solid fa-clipboard-user"></i>
+                </div>
+                <h3 class="font-display font-bold text-xl text-white">Mahudhurio ya Leo (Daily Roll Call)</h3>
+                <p class="text-xs text-slate-400">Tafadhali jaza mahudhurio kabla ya kuanza masomo ya leo.</p>
+            </div>
+
+            <form onsubmit="handleRollCallSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Unapanga kujifunza au kufanya nini leo?</label>
+                    <textarea id="rollCallGoal" required rows="3" placeholder="Mfano: Leo naitazamia Moduli ya Excel kuweka fomula za hesabu za duka langu..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-emerald-400"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl shadow-lg text-sm">
+                    Tuma Mahudhurio (+10 XP)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FELLOWSHIP POST MODAL -->
+    <div id="fellowshipModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-6 border border-brand-accent/30 relative animate-fade-in">
+            <button onclick="closeFellowshipModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <h3 class="font-display font-bold text-xl text-white">Weka Ushahidi wa Fellowship</h3>
+                <p class="text-xs text-slate-400">Shirikisha picha au maelezo ya jinsi ulivyomfundisha mwenzako.</p>
+            </div>
+
+            <form onsubmit="handleFellowshipSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Maelezo ya Elimu Uliyoitoa:</label>
+                    <textarea id="fellowshipText" required rows="3" placeholder="Eleza kwa kifupi uliyemfundisha na matokeo yake..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-brand-accent"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Link ya Picha ya Ushahidi (Optional URL):</label>
+                    <input type="url" id="fellowshipImageUrl" placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-brand-emerald to-teal-600 text-slate-950 font-bold py-3 rounded-xl shadow-lg text-sm">
+                    Chapisha Ushahidi Kwenye Wall
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        // GLOBAL ACADEMY STATE
+        let studentProfile = {
+            fullName: "Mwanafunzi Mwema",
+            phone: "",
+            location: "Tanzania",
+            photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+            points: 150,
+            tier: "Ngazi ya Bure",
+            isPremiumApproved: false,
+            rollCallCompleted: true
+        };
+
+        // INITIALIZATION ON PAGE LOAD
+        window.onload = function () {
+            updateDynamicClockAndGreeting();
+            setInterval(updateDynamicClockAndGreeting, 1000);
+            loadSavedProfile();
+            renderDynamicValues();
+        };
+
+        // 1. DYNAMIC CLOCK & POLITE SWAHILI GREETING ENGINE
+        function updateDynamicClockAndGreeting() {
+            const now = new Date();
+            const hours = now.getHours();
+            
+            // Time Strings
+            const timeString = now.toLocaleTimeString('sw-TZ', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateString = now.toLocaleDateString('sw-TZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            document.getElementById('currentTime').innerText = timeString;
+            document.getElementById('currentDate').innerText = dateString;
+            document.getElementById('certDate').innerText = dateString;
+
+            // Swahili Greetings Logic
+            let greetingTime = "Habari za Siku!";
+            let greetingTitleText = "Karibu Roderick Digital Academy.";
+
+            if (hours >= 5 && hours < 12) {
+                greetingTime = "Habari za Asubuhi za Baraka!";
+                greetingTitleText = "Asubuhi Njema ya Kujenga Maarifa Magya.";
+            } else if (hours >= 12 && hours < 16) {
+                greetingTime = "Habari za Mchana Mwema!";
+                greetingTitleText = "Mchana Safi wa Kusonga Mbele Kimaarifa.";
+            } else {
+                greetingTime = "Habari za Jioni za Heshima!";
+                greetingTitleText = "Jioni Njema ya Kutafakari na Kujifunza.";
+            }
+
+            document.getElementById('greetingTimeText').innerText = greetingTime;
+        }
+
+        // 2. 10-PAGE TAB SWITCHING ENGINE
+        function switchTab(tabId) {
+            const tabs = ['home', 'dashboard', 'free-ict', 'office-mastery', 'media-vfx', 'audio-lab', 'exercises', 'fellowship', 'certificate', 'admin'];
+            
+            tabs.forEach(t => {
+                const pageEl = document.getElementById(`page-${t}`);
+                const btnEl = document.getElementById(`tab-${t}`);
+                
+                if (pageEl) pageEl.classList.add('hidden');
+                if (btnEl) {
+                    btnEl.classList.remove('text-brand-accent', 'border-brand-accent');
+                    btnEl.classList.add('text-slate-400', 'border-transparent');
+                }
+            });
+
+            // Show Active Page
+            const activePage = document.getElementById(`page-${tabId}`);
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            
+            if (activePage) activePage.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'border-transparent');
+                activeBtn.classList.add('text-brand-accent', 'border-brand-accent');
+            }
+
+            // Close Mobile Menu
+            document.getElementById('mobileMenu').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // 3. REGISTRATION & DYNAMIC PHOTO ENGINE
+        function openRegistrationModal() {
+            document.getElementById('registrationModal').classList.remove('hidden');
+        }
+
+        function closeRegistrationModal() {
+            document.getElementById('registrationModal').classList.add('hidden');
+        }
+
+        function previewUserPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    studentProfile.photoUrl = e.target.result;
+                    document.getElementById('formPhotoPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleRegistrationSubmit(e) {
+            e.preventDefault();
+            studentProfile.fullName = document.getElementById('regFullName').value;
+            studentProfile.phone = document.getElementById('regPhone').value;
+            studentProfile.location = document.getElementById('regLocation').value;
+            studentProfile.points += 50; // Bonus points for completing registration
+
+            saveProfileToStorage();
+            renderDynamicValues();
+            closeRegistrationModal();
+
+            alert(`🎉 Hongera na Asante sana Ndugu ${studentProfile.fullName}! Usajili wako umekamilika vyema kabisa.`);
+        }
+
+        function renderDynamicValues() {
+            // Update Header & Dashboard
+            document.getElementById('navUserName').innerText = studentProfile.fullName;
+            document.getElementById('navProfilePic').src = studentProfile.photoUrl;
+            document.getElementById('navPoints').innerText = studentProfile.points;
+            document.getElementById('statPoints').innerText = `${studentProfile.points} XP`;
+            document.getElementById('userHeaderCard').classList.remove('hidden');
+
+            // Certificate Render
+            document.getElementById('certStudentName').innerText = studentProfile.fullName;
+            document.getElementById('certStudentPhoto').src = studentProfile.photoUrl;
+        }
+
+        // 4. DAILY ROLL CALL SYSTEM
+        function openRollCallModal() {
+            document.getElementById('rollCallModal').classList.remove('hidden');
+        }
+
+        function closeRollCallModal() {
+            document.getElementById('rollCallModal').classList.add('hidden');
+        }
+
+        function handleRollCallSubmit(e) {
+            e.preventDefault();
+            studentProfile.rollCallCompleted = true;
+            studentProfile.points += 10;
+            renderDynamicValues();
+            closeRollCallModal();
+            alert("✅ Asante sana! Mahudhurio yako ya leo yamehifadhiwa vyema.");
+        }
+
+        // 5. PREMIUM UNLOCK & WHATSAPP TRIGGER ENGINE
+        function requestPaymentApproval(moduleName) {
+            const teacherPhone = "255712345678"; // Replace with real teacher phone
+            const msg = `Habari%20za%20muda%20huu%20Mwalimu%20Rodrick.%20Mimi%20ni%20${encodeURIComponent(studentProfile.fullName)},%20nimeomba%20idhini%20ya%20kufungulia%20Moduli%20ya%20${encodeURIComponent(moduleName)}.`;
+            window.open(`https://wa.me/${teacherPhone}?text=${msg}`, '_blank');
+        }
+
+        function simulateTeacherUnlock() {
+            studentProfile.isPremiumApproved = true;
+            studentProfile.tier = "Premium Tier";
+            document.getElementById('officeLockedBanner').classList.add('hidden');
+            document.getElementById('officeUnlockedContent').classList.remove('hidden');
+            document.getElementById('statAccountTier').innerText = "Premium Tier";
+            alert("🔓 Hongera! Mwalimu amekuidhinisha kusoma Premium Office Mastery!");
+        }
+
+        function markLessonComplete(lessonTitle) {
+            studentProfile.points += 20;
+            renderDynamicValues();
+            alert(`🎉 Pongezi tele! Umekamilisha ${lessonTitle} na kujizolea alama +20 XP!`);
+        }
+
+        // 6. FELLOWSHIP POST CREATION
+        function openFellowshipPostModal() {
+            document.getElementById('fellowshipModal').classList.remove('hidden');
+        }
+
+        function closeFellowshipModal() {
+            document.getElementById('fellowshipModal').classList.add('hidden');
+        }
+
+        function handleFellowshipSubmit(e) {
+            e.preventDefault();
+            const text = document.getElementById('fellowshipText').value;
+            const img = document.getElementById('fellowshipImageUrl').value || "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=80";
+
+            const feed = document.getElementById('fellowshipFeed');
+            const newPostHTML = `
+                <div class="glass-panel p-6 rounded-2xl space-y-4 border border-slate-800 animate-fade-in">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img src="${studentProfile.photoUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-brand-accent">
+                            <div>
+                                <h4 class="font-bold text-sm text-white">${studentProfile.fullName}</h4>
+                                <p class="text-[10px] text-slate-400">Muda huu • ${studentProfile.location}</p>
+                            </div>
+                        </div>
+                        <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] px-3 py-1 rounded-full font-bold">
+                            <i class="fa-solid fa-clock"></i> Inasubiri Review ya Mwalimu
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">${text}</p>
+                    <div class="rounded-xl overflow-hidden max-h-64 border border-slate-800">
+                        <img src="${img}" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            `;
+            feed.insertAdjacentHTML('afterbegin', newPostHTML);
+            studentProfile.points += 30;
+            renderDynamicValues();
+            closeFellowshipModal();
+            alert("🌟 Ushahidi wako wa Fellowship umetumwa vyema kwa Mwalimu!");
+        }
+
+        // 7. QUIZ ANSWER EVALUATION
+        function submitQuizAnswer(btn, isCorrect) {
+            const feedback = document.getElementById('quizFeedback');
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.className = "p-4 rounded-xl text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                feedback.innerText = "✅ Jibu Sahihi Kabisa! =SUM(A1:A10) ndiyo fomula rasmi. Poinz +20 XP zimeongezwa!";
+                studentProfile.points += 20;
+                renderDynamicValues();
+            } else {
+                feedback.className = "p-4 rounded-xl text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30";
+                feedback.innerText = "❌ Jibu Si Sahihi. Jaribu tena au urejee kwenye somo la Excel.";
+            }
+        }
+
+        // 8. VIRAL WHATSAPP INVITE SHARE
+        function shareAcademyOnWhatsApp() {
+            const shareText = `Habari! Nakuakaribisha kujiunga na Roderick Digital Academy kujifunza Kompyuta, Excel na Video Editing Bure kabisa! Jiunge hapa: ${window.location.href}`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+        }
+
+        // 9. TEACHER AUDIO GREETING SIMULATOR
+        function playTeacherAudioGreeting() {
+            const audioBtn = document.getElementById('audioBtnText');
+            audioBtn.innerText = "Sauti Inacheza... (Karibu Sana Mwanafunzi!)";
+            setTimeout(() => {
+                audioBtn.innerText = "Sikiliza Salamu ya Sauti ya Mwalimu";
+            }, 5000);
+        }
+
+        // 10. ADMIN APPROVAL SIMULATION
+        function approveStudentRequest(btn, studentName) {
+            btn.parentElement.parentElement.classList.add('opacity-50');
+            btn.innerText = "Approved ✅";
+            alert(`✅ Idhini imetolewa kikamilifu kwa mwanafunzi ${studentName}! Akaunti yake imefunguliwa.`);
+        }
+
+        // PERSISTENCE STORAGE
+        function saveProfileToStorage() {
+            localStorage.setItem('roderick_student_profile', JSON.stringify(studentProfile));
+        }
+
+        function loadSavedProfile() {
+            const saved = localStorage.getItem('roderick_student_profile');
+            if (saved) {
+                studentProfile = JSON.parse(saved);
+            }
+        }
+    </script>
+</body>
+</html>
+```
